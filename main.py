@@ -5,7 +5,7 @@ def main():
     # Ex. A
     a1 = 13
     a2 = a3 = - 1
-    N = 12
+    N = 903
     f = 1
     A = generateSampleMatrix(a1, a2, a3, N, 1)
     b = generateSampleVector(N, f)
@@ -13,11 +13,13 @@ def main():
     #Ex. B
     resLimit = 10**-9
 
-    roots_x = LinSolver_Jacobi(A, b, N, resLimit)
-    x = np.linalg.solve(A, b)
+    solJacobi = LinSolver_Jacobi(A, b, N, resLimit)
+    print(solJacobi[0], solJacobi[1])
 
-    print(roots_x)
-    print(x)
+    solGS = LinSolver_GaussSiedel(A, b, N, resLimit)
+    print(solGS[0], solGS[1])
+    #TODO compare time of above functions
+
 
 
 
@@ -73,10 +75,35 @@ def LinSolver_Jacobi(A, b, N, resLimit):
 
         res = calcRes(A, x, b)
         normRes = calcNorm(res, 2)
-        print(normRes)
-        print(x)
+        #print(normRes)
 
-    return x
+    return x, noIter
+
+def LinSolver_GaussSiedel(A, b, N, resLimit):
+    if(N < 1):
+        print("I can't work... n < 1")
+        return
+
+    normRes = 1
+    #TODO how does variety of init values in x affects no. of iterations?
+    x = [0 for _ in range(N)] # init x
+
+    noIter = 0
+    while normRes > resLimit:
+        noIter += 1
+        x_prev = x.copy()
+
+        for i in range(N):
+            sum = 0
+            for j in range(N):
+                if j != i:
+                    sum += A[i][j] * x[j]
+            x[i] = (b[i] - sum) / A[i][i]
+        res = calcRes(A, x, b)
+        normRes = calcNorm(res, 2)
+        #print(normRes)
+
+    return x, noIter
 
 
 def transposeMat(M):
