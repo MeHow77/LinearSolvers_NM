@@ -13,8 +13,17 @@ def main():
     #Ex. B
     resLimit = 10**-9
 
-    roots_x = LinSolver_Jacobi(A, b, N, resLimit)
-    print(roots_x)
+    #roots_x = LinSolver_Jacobi(A, b, N, resLimit)
+    #x = np.linalg.solve(A, b)
+
+    #print(roots_x)
+    #print(x)
+    tmp = []
+    tmp.append(b)
+
+    print(multiplyMatrices(A, tmp, False, True))
+    print(np.matmul(A, b))
+
 
 
 def generateSampleMatrix(a1, a2, a3, N, f):
@@ -53,7 +62,7 @@ def LinSolver_Jacobi(A, b, N, resLimit):
 
     normRes = 1
     #TODO how does variety of init values in x affects no. of iterations?
-    x = [0 for _ in range(N)] # init x
+    x = [2 for _ in range(N)] # init x
 
     noIter = 0
     while normRes > resLimit:
@@ -74,20 +83,44 @@ def LinSolver_Jacobi(A, b, N, resLimit):
     return x
 
 
+def transposeMat(M):
+    n = len(M)
+    m = len(M[0])
+
+    newM = []
+    for i in range(m):
+        newM.append([])
+        for j in range(n):
+            newM[i].append(0)
+
+    for i in range(n):
+        for j in range(m):
+            newM[j][i] = M[i][j]
+    return newM
 
 
-def multiplyMatrices(A, B):
+def multiplyMatrices(A, B, toTransposeA, toTransposeB):
     #it is not multiusable function, it's only for lists as they are
     C = []
     #A is NxM; B is MxP
+
+    if toTransposeA:
+        A = transposeMat(A)
+    if toTransposeB:
+        B = transposeMat(B)
     n = len(A)
+    m1 = len(A[0])
     p = len(B[0])
     m = len(B)
 
-    for i in range(m):
+    if m1 != m:
+        print("It can't work, sizes doesnt match")
+        return
+
+    for i in range(n):
         C.append([])
 
-    for i in range(m):
+    for i in range(n):
         for j in range(p):
             sum = 0
             for k in range(m):
@@ -95,20 +128,39 @@ def multiplyMatrices(A, B):
             C[i].append(sum)
     return C
 
+    # # it is not multiusable function, it's only for lists as they are
+    # C = []
+    # # A is NxM; B is MxP
+    # n = len(A)
+    # p = len(B[0])
+    # m = len(B)
+    #
+    # for i in range(n):
+    #     C.append([])
+    #
+    # for i in range(n):
+    #     for j in range(p):
+    #         sum = 0
+    #         for k in range(m):
+    #             sum += A[i][k] * B[k][j]
+    #         C[i].append(sum)
+    # return C
+
 def calcRes(A, x, b):
     # res = y - b; y = A*x
     if isinstance(x[0],list) == False: #so it's vector
         tmpArr = []
         tmpArr.append(x)
-
-    y = multiplyMatrices(A, tmpArr)
+        y = multiplyMatrices(A, tmpArr)
+    else:
+        y = multiplyMatrices(A, x)
     res = list(map(sub, y[0], b))
     return res
 
 def calcNorm(res, p):
     normRes_squared = list(map(lambda x1: x1**p, res))
     normRes_squared = sum(normRes_squared)
-    return np.power(1/p, normRes_squared)
+    return np.power(normRes_squared, 1/p)
 
 
 
