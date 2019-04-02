@@ -7,23 +7,34 @@ def main():
     a2 = a3 = - 1
     N = 903
     f = 1
-    A = generateSampleMatrix(a1, a2, a3, N, 1)
+    A = generateSampleMatrix(a1, a2, a3, N)
     b = generateSampleVector(N, f)
 
     #Ex. B
     resLimit = 10**-9
-
-    solJacobi = LinSolver_Jacobi(A, b, N, resLimit)
-    print(solJacobi[0], solJacobi[1])
-
-    solGS = LinSolver_GaussSiedel(A, b, N, resLimit)
-    print(solGS[0], solGS[1])
+    # solJacobi = LinSolver_Jacobi(A, b, N, resLimit)
+    # print(solJacobi[0], solJacobi[1])
+    #
+    # solGS = LinSolver_GaussSiedel(A, b, N, resLimit)
+    # print(solGS[0], solGS[1])
     #TODO compare time of above functions
 
+    a1 = 3
+    a2 = a3 = -1
+
+    # A = generateSampleMatrix(a1, a2, a3, N)
+    # solJacobi_C = LinSolver_Jacobi(A, b, N, resLimit)
+    # print(solJacobi_C[0], solJacobi_C[1])
+    #
+    # solGS_C = LinSolver_GaussSiedel(A, b, N, resLimit)
+    # print(solGS_C[0], solGS_C[1])
+
+    #They don't converge;
 
 
 
-def generateSampleMatrix(a1, a2, a3, N, f):
+
+def generateSampleMatrix(a1, a2, a3, N):
     finalMatrix = []
     for i in range(N):
         finalMatrix.append([])
