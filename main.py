@@ -1,5 +1,79 @@
 import numpy as np
-from operator import sub
+
+class Matrix:
+
+    def __init__(self, n, m):
+        self.rows = n
+        self.cols = m
+        self.data = []
+
+        for i in range(n):
+            self.data.append([])
+            for j in range(m):
+                self.data[i].append(0)
+
+    @staticmethod
+    def fromValues(values):
+        obj = Matrix(len(values), len(values[0]))
+        for i in range(obj.rows):
+            for j in range(obj.cols):
+                obj.data[i][j] = values[i][j]
+        return obj
+
+
+    def put(self, x, y, val):
+        self.data[x][y] = val
+
+    def transpose(self):
+        n = self.rows
+        m = self.cols
+
+        newM = []
+        for i in range(m):
+            newM.append([])
+            for j in range(n):
+                newM[i].append(0)
+
+        for i in range(n):
+            for j in range(m):
+                newM[j][i] = self.data[i][j]
+        self.data = newM
+
+    def __mul__(self, other):
+        if isinstance(self, other) is not True:
+            raise("Arguments are not matrices!")
+
+
+        # A(self) is NxM; B(other) is MxP
+        n = len(self.data)
+        m_A = len(self.data[0])
+        p = len(other.data[0])
+        m_B = len(other.data)
+        if m_A != m_B:
+            raise("Dimensions don't match!")
+        m = m_A
+
+        C = Matrix(n,p)
+
+
+        for i in range(n):
+            for j in range(p):
+                sum = 0
+                for k in range(m):
+                    sum += self.data[i][k] * other.data[k][j]
+                C.put(i, j, sum)
+        return C
+
+    def print(self):
+        for row in range(self.rows):
+            print("|", end='')
+            for col in range(self.cols):
+                print(self.data[row][col], end='')
+                print(" ", end='')
+            print("|")
+
+
+
 
 def main():
     # Ex. A
@@ -8,7 +82,10 @@ def main():
     N = 903
     f = 1
     A = generateSampleMatrix(a1, a2, a3, N)
+    m_A = Matrix.fromValues(A)
     b = generateSampleVector(N, f)
+    m_B = Matrix.fromValues(b)
+    m_B.print()
 
     #Ex. B
     resLimit = 10**-9
@@ -60,7 +137,9 @@ def generateSampleMatrix(a1, a2, a3, N):
 
 def generateSampleVector(N, f):
     vec = [np.sin (i * (f+1)) for i in range(N)]
-    return vec
+    matrix_1xN = []
+    matrix_1xN.append(vec)
+    return matrix_1xN
 
 
 def LinSolver_Jacobi(A, b, N, resLimit):
