@@ -17,9 +17,11 @@ class Vector:
     def put(self, i, val):
         self.data[i] = val
 
+
     def print(self):
         for el in self.data:
             print(el, end='')
+            print(" ", end='')
         print()
 
     def __mul__(self, other):
