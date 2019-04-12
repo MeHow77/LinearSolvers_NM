@@ -97,13 +97,14 @@ class Matrix:
         for cell in self.data:
             cell *= other
 
-    def print(self, prec):
+    def print(self, prec = None):
         for row in range(self.rows):
             for col in range(self.cols):
-                if prec == 0:
-                    print(self.data[row][col], end='')
+                if prec is None:
+                    print(f'% 4.3f' % self.data[row][col], end='')
                 else:
-                    print(f'%0{prec}.{prec-1}f'%(self.data[row][col]), end='')
+                    n = prec
+                    print(f'% {n}.{n - 1}f' % (self.data[row][col]), end='')
                 print(" ", end='')
             print()
 

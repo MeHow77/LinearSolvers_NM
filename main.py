@@ -69,10 +69,11 @@ def main():
     a1 = 3
     a2 = a3 = -1
 
-    # A = generateSampleMatrix(a1, a2, a3, N)
-    # m_A = Matrix.fromValues(A)
-    # b = generateSampleVector(N, f)
-    # vec_b = Vector.fromValues(b)
+    A = generateSampleMatrix(a1, a2, a3, N)
+    m_A = Matrix.fromValues(A)
+    b = generateSampleVector(N, f)
+    vec_b = Vector.fromValues(b)
+
     # solJacobi_C = LinSolver(m_A, vec_b, N, resLimit, Jacobi)
     # print(solJacobi_C[1])
     # solJacobi_C[0].print()
@@ -84,8 +85,41 @@ def main():
     # They don't converge;
 
     # Ex. D
-    roots = LinSolver(m_A, vec_b, N)
-    roots.print(6)
+    # roots = LinSolver(m_A, vec_b, N)
+    # #print(np.linalg.solve(m_A.data, vec_b.data))
+    # roots.print(6)
+    # res = calcRes(m_A, roots, vec_b)
+    # print(calcNorm(res, 2))
+
+    # Ex. E
+    a1 = 13
+    a2 = a3 = - 1
+    samples = [100, 500, 1000, 2000, 3000]
+    times = [[], [], []]
+    for sample in samples:
+        print(sample)
+        A = generateSampleMatrix(a1, a2, a3, sample)
+        m_A = Matrix.fromValues(A)
+        b = generateSampleVector(sample, f)
+        vec_b = Vector.fromValues(b)
+
+        time_start = time.time()
+        IterLinSolver(m_A, vec_b, sample, resLimit, Jacobi)
+        time_end = time.time()
+        times[0].append(time_end - time_start)
+
+        time_start = time.time()
+        IterLinSolver(m_A, vec_b, sample, resLimit, GaussSiedel)
+        time_end = time.time()
+        times[1].append(time_end - time_start)
+
+        time_start = time.time()
+        LinSolver(m_A, vec_b, sample)
+        time_end = time.time()
+        times[2].append(time_end - time_start)
+
+    print(times)
+
 
 def IterLinSolver(m_A, vec_b, N, resLimit, method):
     if (N < 1):

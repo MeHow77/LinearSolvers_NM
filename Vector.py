@@ -17,11 +17,17 @@ class Vector:
     def put(self, i, val):
         self.data[i] = val
 
-    def print(self, n):
-        for elem in self.data:
-            print(f'%0{n}.{n-1}f'%(elem), end='')
+    def print(self, prec = None):
+        n = prec
+        for i, elem in enumerate(self.data):
+            if prec is None:
+                print(f'% 4.3f' % elem, end='')
+            else:
+                print(f'% {n}.{n-1}f' % elem, end='')
             print(" ", end='')
-            print()
+            if i % 6 == 5:
+                print()
+
 
     def __mul__(self, other):
         if isinstance(other, Matrix):
