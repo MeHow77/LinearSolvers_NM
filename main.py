@@ -170,12 +170,4 @@ def calcNorm(v_res, p):
     normRes_squared = sum(normRes_squared)
     return np.power(normRes_squared, 1 / p)
 
-
-def matSub(A, B):
-    C = []
-    for i in range(len(A)):
-        C.append(A[i] - B[i])
-    return C
-
-
 main()

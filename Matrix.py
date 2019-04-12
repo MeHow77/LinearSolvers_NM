@@ -52,6 +52,15 @@ class Matrix:
             return self.mulScalarMat(other)
         raise ("Not defined multiplication!")
 
+    def __sub__(self, other):
+        if other.rows != self.rows and other.cols != self.cols:
+            raise ("Dimension doesn't match!")
+        C = Matrix.fromValues(self.data)
+        for i in range(self.rows):
+            for j in range(self.cols):
+                val = self.data[i][j] - other[i][j]
+                C.put(i, j, val)
+        return C
     def mulMatrices(self, other):
         # A(self) is NxM; B(other) is MxP
         n = len(self.data)
