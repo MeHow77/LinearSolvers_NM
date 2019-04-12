@@ -17,12 +17,11 @@ class Vector:
     def put(self, i, val):
         self.data[i] = val
 
-
-    def print(self):
-        for el in self.data:
-            print(el, end='')
+    def print(self, n):
+        for elem in self.data:
+            print(f'%0{n}.{n-1}f'%(elem), end='')
             print(" ", end='')
-        print()
+            print()
 
     def __mul__(self, other):
         if isinstance(other, Matrix):
@@ -56,6 +55,7 @@ class Vector:
             result = self.data[i] - other.data[i]
             newVec.put(i, result)
         return newVec
+
 
 
 from Matrix import *

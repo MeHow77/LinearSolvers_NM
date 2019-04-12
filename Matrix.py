@@ -97,10 +97,13 @@ class Matrix:
         for cell in self.data:
             cell *= other
 
-    def print(self):
+    def print(self, prec):
         for row in range(self.rows):
             for col in range(self.cols):
-                print('{:03.2f}'.format(self.data[row][col]), end='')
+                if prec == 0:
+                    print(self.data[row][col], end='')
+                else:
+                    print(f'%0{prec}.{prec-1}f'%(self.data[row][col]), end='')
                 print(" ", end='')
             print()
 

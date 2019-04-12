@@ -44,19 +44,20 @@ def main():
     A = generateSampleMatrix(a1, a2, a3, N)
     m_A = Matrix.fromValues(A)
     b = generateSampleVector(N, f)
-    m_b = Vector.fromValues(b)
+    vec_b = Vector.fromValues(b)
+
 
     # Ex. B
     resLimit = 10 ** -9
     # start = time.time()
-    # solJacobi = IterLinSolver(m_A, m_b, N, resLimit, Jacobi)
+    # solJacobi = IterLinSolver(m_A, vec_b, N, resLimit, Jacobi)
     # solJacobi[0].print()
     # print(solJacobi[1])
     # end = time.time()
     # print(end - start)
     #
     # start = time.time()
-    # solGS = IterLinSolver(m_A, m_b, N, resLimit, GaussSiedel)
+    # solGS = IterLinSolver(m_A, vec_b, N, resLimit, GaussSiedel)
     # solGS[0].print()
     # print(solGS[1])
     # end = time.time()
@@ -71,27 +72,20 @@ def main():
     # A = generateSampleMatrix(a1, a2, a3, N)
     # m_A = Matrix.fromValues(A)
     # b = generateSampleVector(N, f)
-    # m_b = Vector.fromValues(b)
-    # solJacobi_C = LinSolver(m_A, m_b, N, resLimit, Jacobi)
+    # vec_b = Vector.fromValues(b)
+    # solJacobi_C = LinSolver(m_A, vec_b, N, resLimit, Jacobi)
     # print(solJacobi_C[1])
     # solJacobi_C[0].print()
     #
-    # solGS_C = LinSolver(m_A, m_b, N, resLimit, GaussSiedel)
+    # solGS_C = LinSolver(m_A, vec_b, N, resLimit, GaussSiedel)
     # print(solGS_C[1])
     # solGS_C[0].print()
 
     # They don't converge;
 
     # Ex. D
-    #debug
-    val = [[3, 0, 0, 0], [-1, 1, 0, 0], [3, -2, -1, 0], [1, -2, 6, 2]]
-    val_b = [5, 6, 4, 2]
-    debug_b = Vector.fromValues(val_b)
-    A = Matrix.fromValues(val)
-    result = forwardSubstition(A, debug_b)
-    check = A*result
-    #debug end
-    LinSolver(A, debug_b, 4, resLimit)
+    roots = LinSolver(m_A, vec_b, N)
+    roots.print(6)
 
 def IterLinSolver(m_A, vec_b, N, resLimit, method):
     if (N < 1):
@@ -120,8 +114,19 @@ def forwardSubstition(L, b):
         soln.data[i] = (b.data[i] - sum) / L.data[i][i]
     return soln
 
+def backSubstition(L, b):
+    soln = Vector(b.size)
 
-def LinSolver(m_A, vec_b, N, resLimit):
+    for i in range(L.rows - 1, -1, -1):
+        sum = 0
+        for j in range(i, L.rows):
+            sum += L.data[i][j] * soln.data[j]
+        soln.data[i] = (b.data[i] - sum) / L.data[i][i]
+    return soln
+
+
+
+def LinSolver(m_A, vec_b, N):
 
     if m_A.data[0][0] == 0:
         # pivoting
@@ -133,7 +138,9 @@ def LinSolver(m_A, vec_b, N, resLimit):
 
     # Ly = b => y = L^-1*b
     y = forwardSubstition(L, vec_b)
-
+    # Ux = y => x = U^-1*y
+    x = backSubstition(U, y)
+    return x
 
 
 def CalcLUMatrices(m_A, N):
