@@ -37,6 +37,12 @@ class Matrix:
         self.data = newM
         self.rows, self.cols = self.cols, self.rows
 
+    def generatePermutationMat(self):
+        I = Matrix(self.rows, self.cols)
+        for i in range(self.rows):
+            I.data[i][(i + 1) % self.cols] = 1
+        return I
+
     def __mul__(self, other):
         if isinstance(other, Matrix):
             return self.mulMatrices(other)

@@ -83,7 +83,7 @@ def main():
     # They don't converge;
 
     # Ex. D
-    val = [[2, 1, 1, 0], [4, 3, 3, 1], [8, 7, 9, 5], [6, 7, 9, 8]]
+    val = [[0, 1, 1, 0], [4, 3, 3, 1], [8, 7, 9, 5], [6, 7, 9, 8]]
     A = Matrix.fromValues(val)
     LinSolver(A, m_b, 4, resLimit)
 
@@ -105,6 +105,10 @@ def IterLinSolver(m_A, vec_b, N, resLimit, method):
 
 
 def LinSolver(m_A, vec_b, N, resLimit):
+    m_A.print()
+    if m_A.data[0][0] == 0:
+        m_A  = m_A.generatePermutationMat()*m_A
+    m_A.print()
     L, U = CalcLUMatrices(m_A, N)
     y = Vector(N)
     y = U*vec_b
