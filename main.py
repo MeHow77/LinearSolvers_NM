@@ -83,9 +83,15 @@ def main():
     # They don't converge;
 
     # Ex. D
-    val = [[0, 1, 1, 0], [4, 3, 3, 1], [8, 7, 9, 5], [6, 7, 9, 8]]
+    #debug
+    val = [[3, 0, 0, 0], [-1, 1, 0, 0], [3, -2, -1, 0], [1, -2, 6, 2]]
+    val_b = [5, 6, 4, 2]
+    debug_b = Vector.fromValues(val_b)
     A = Matrix.fromValues(val)
-    LinSolver(A, m_b, 4, resLimit)
+    result = forwardSubstition(A, debug_b)
+    check = A*result
+    #debug end
+    LinSolver(A, debug_b, 4, resLimit)
 
 def IterLinSolver(m_A, vec_b, N, resLimit, method):
     if (N < 1):
@@ -104,6 +110,17 @@ def IterLinSolver(m_A, vec_b, N, resLimit, method):
     return soln, noIter
 
 
+def forwardSubstition(L, b):
+    soln = Vector(b.size)
+
+    for i in range(L.rows):
+        sum = 0
+        for j in range(i):
+            sum += L.data[i][j] * soln.data[j]
+        soln.data[i] = (b.data[i] - sum) / L.data[i][i]
+    return soln
+
+
 def LinSolver(m_A, vec_b, N, resLimit):
 
     if m_A.data[0][0] == 0:
@@ -113,8 +130,10 @@ def LinSolver(m_A, vec_b, N, resLimit):
         vec_b = P * vec_b
 
     L, U = CalcLUMatrices(m_A, N)
-    y = Vector(N)
-    y = U*vec_b
+
+    # Ly = b => y = L^-1*b
+    y = forwardSubstition(L, vec_b)
+
 
 
 def CalcLUMatrices(m_A, N):

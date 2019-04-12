@@ -61,6 +61,7 @@ class Matrix:
                 val = self.data[i][j] - other[i][j]
                 C.put(i, j, val)
         return C
+
     def mulMatrices(self, other):
         # A(self) is NxM; B(other) is MxP
         n = len(self.data)
