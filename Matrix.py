@@ -84,7 +84,7 @@ class Matrix:
     def print(self):
         for row in range(self.rows):
             for col in range(self.cols):
-                print(self.data[row][col], end='')
+                print('{:03.2f}'.format(self.data[row][col]), end='')
                 print(" ", end='')
             print()
 
