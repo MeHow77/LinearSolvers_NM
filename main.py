@@ -105,10 +105,13 @@ def IterLinSolver(m_A, vec_b, N, resLimit, method):
 
 
 def LinSolver(m_A, vec_b, N, resLimit):
-    m_A.print()
+
     if m_A.data[0][0] == 0:
-        m_A  = m_A.generatePermutationMat()*m_A
-    m_A.print()
+        # pivoting
+        P = m_A.generatePermutationMat()
+        m_A  = P * m_A
+        vec_b = P * vec_b
+
     L, U = CalcLUMatrices(m_A, N)
     y = Vector(N)
     y = U*vec_b
