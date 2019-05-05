@@ -46,22 +46,15 @@ def main():
     b = generateSampleVector(N, f)
     vec_b = Vector.fromValues(b)
 
-
     # Ex. B
     resLimit = 10 ** -9
-    # start = time.time()
-    # solJacobi = IterLinSolver(m_A, vec_b, N, resLimit, Jacobi)
-    # solJacobi[0].print()
-    # print(solJacobi[1])
-    # end = time.time()
-    # print(end - start)
-    #
-    # start = time.time()
-    # solGS = IterLinSolver(m_A, vec_b, N, resLimit, GaussSiedel)
-    # solGS[0].print()
-    # print(solGS[1])
-    # end = time.time()
-    # print(end - start)
+    solJacobi = IterLinSolver(m_A, vec_b, N, resLimit, Jacobi)
+    solJacobi[0].print()
+    print(solJacobi[1])
+
+    solGS = IterLinSolver(m_A, vec_b, N, resLimit, GaussSiedel)
+    solGS[0].print()
+    print(solGS[1])
 
     # TODO compare time of above functions
 
@@ -85,11 +78,12 @@ def main():
     # They don't converge;
 
     # Ex. D
-    # roots = LinSolver(m_A, vec_b, N)
-    # #print(np.linalg.solve(m_A.data, vec_b.data))
-    # roots.print(6)
-    # res = calcRes(m_A, roots, vec_b)
-    # print(calcNorm(res, 2))
+
+    roots = LinSolver(m_A, vec_b, N)
+    # print(np.linalg.solve(m_A.data, vec_b.data))
+    roots.print(6)
+    res = calcRes(m_A, roots, vec_b)
+    print(calcNorm(res, 2))
 
     # Ex. E
     a1 = 13
@@ -126,7 +120,6 @@ def IterLinSolver(m_A, vec_b, N, resLimit, method):
         raise ("Size of vector is negative!")
 
     normRes = 1
-    # TODO how does variety of init values in x affects no. of iterations?
     soln = Vector(N)
     noIter = 0
 
@@ -135,7 +128,7 @@ def IterLinSolver(m_A, vec_b, N, resLimit, method):
         soln.data = method(m_A.data, vec_b.data, N, soln.data)
         res = calcRes(m_A, soln, vec_b)
         normRes = calcNorm(res, 2)
-    return soln, noIter
+    return soln, noIter,
 
 
 def forwardSubstition(L, b):
@@ -148,6 +141,7 @@ def forwardSubstition(L, b):
         soln.data[i] = (b.data[i] - sum) / L.data[i][i]
     return soln
 
+
 def backSubstition(L, b):
     soln = Vector(b.size)
 
@@ -159,13 +153,11 @@ def backSubstition(L, b):
     return soln
 
 
-
 def LinSolver(m_A, vec_b, N):
-
     if m_A.data[0][0] == 0:
         # pivoting
         P = m_A.generatePermutationMat()
-        m_A  = P * m_A
+        m_A = P * m_A
         vec_b = P * vec_b
 
     L, U = CalcLUMatrices(m_A, N)
@@ -195,6 +187,7 @@ def CalcLUMatrices(m_A, N):
             U.data[j][k:] = rowValues
     return L, U
 
+
 def GaussSiedel(m_A, vec_b, N, result):
     for i in range(N):
         sum = 0
@@ -217,8 +210,6 @@ def Jacobi(m_A, vec_b, N, result):
     return result
 
 
-#
-
 def calcRes(A, x, b):
     y = A * x
     res = y - b
@@ -229,5 +220,6 @@ def calcNorm(v_res, p):
     normRes_squared = list(map(lambda x1: x1 ** p, v_res.data))
     normRes_squared = sum(normRes_squared)
     return np.power(normRes_squared, 1 / p)
+
 
 main()
